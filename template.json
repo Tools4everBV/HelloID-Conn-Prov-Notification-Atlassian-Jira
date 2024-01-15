@@ -1,0 +1,52 @@
+[
+  {
+    "key": "scriptFlow",
+    "type": "input",
+    "defaultValue": "Ticket",
+    "templateOptions": {
+      "label": "Script flow",
+      "disabled": true
+    },
+    "hide": false
+  },
+  {
+    "key": "projectid",
+    "type": "input",
+    "defaultValue": "TES",
+    "templateOptions": {
+      "label": "project id",
+      "required": true,
+      "description": "Fixed value project id"
+    }
+  },
+  {
+    "key": "summary",
+    "type": "input",
+    "defaultValue": "Request for laptop {{person.displayname}}",
+    "templateOptions": {
+      "label": "Summary",
+      "description": "Fill in the desired title of the ticket.",
+      "required": true
+    }
+  },
+  {
+    "key": "description",
+    "type": "textarea",
+    "defaultValue": "Please prepare a laptop for the employee below.\n\nName: {{person.Name.NickName}}\nLastname: {{person.Name.FamilyName}}\nExternalID: {{person.externalid}}\n\nTitle: {{Person.PrimaryContract.Title.Name}}\nDepartment: {{Person.PrimaryContract.Department.DisplayName}}\n",
+    "templateOptions": {
+      "label": "Description",
+      "required": true,
+      "rows": 15
+    }
+  },
+  {
+    "key": "issueType",
+    "type": "input",
+    "defaultValue": "Task",
+    "templateOptions": {
+      "label": "Issue type",
+      "description": "",
+      "rows": 5
+    }
+  }
+]
