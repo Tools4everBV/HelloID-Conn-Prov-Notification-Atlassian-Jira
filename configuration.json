@@ -31,14 +31,5 @@
       "placeholder": "Please enter an API key",
       "required": true
     }
-  },
-  {
-    "key": "isDebug",
-    "type": "checkbox",
-    "defaultValue": false,
-    "templateOptions": {
-      "label": "Toggle debug logging",
-      "required": false
-    }
   }
 ]

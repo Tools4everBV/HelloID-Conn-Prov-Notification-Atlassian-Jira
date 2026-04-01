@@ -4,9 +4,6 @@
 # Version: 1.0.0 | new-powershell-connector
 #####################################################
 
-# Set to true at start, because only when an error occurs it is set to false
-$outputContext.Success = $true
-
 # Enable TLS1.2
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
 
@@ -36,8 +33,8 @@ function New-AuthorizationHeaders {
         $key = "Basic $base64"
         $headers = @{
             "authorization" = $Key
-            "Accept" = "application/json"
-            "Content-Type" = "application/json"
+            "Accept"        = "application/json"
+            "Content-Type"  = "application/json"
         } 
 
         Write-Output $headers  
@@ -49,50 +46,49 @@ function New-AuthorizationHeaders {
 #endregion functions
 
 try {
-    [SecureString]$securePassword = ConvertTo-SecureString $actionContext.Configuration.password -AsPlainText -Force
-    $headers = New-AuthorizationHeaders -username $actionContext.Configuration.username -password $securePassword
+    if ($actionContext.TemplateConfiguration.scriptFlow -eq "Ticket") {
 
-    if (-Not($actionContext.DryRun -eq $true)) {
-        # Write notification logic here
-
-        if ($actionContext.TemplateConfiguration.scriptFlow -eq "Ticket") {
-            # build the ticketObject
-            $ticketObject = @{
-                fields = @{
-                    project = @{
-                        key = $actionContext.TemplateConfiguration.projectid
-                    }
-                    summary = $actionContext.TemplateConfiguration.summary
-                    description = $actionContext.TemplateConfiguration.description
-                    issuetype = @{
-                        name = $actionContext.TemplateConfiguration.issuetype
-                    }
+        [SecureString]$securePassword = ConvertTo-SecureString $actionContext.Configuration.password -AsPlainText -Force
+        $headers = New-AuthorizationHeaders -username $actionContext.Configuration.username -password $securePassword
+        
+        # build the ticketObject
+        $ticketObject = @{
+            fields = @{
+                project     = @{
+                    key = $actionContext.TemplateConfiguration.projectid
+                }
+                summary     = $actionContext.TemplateConfiguration.summary
+                description = $actionContext.TemplateConfiguration.description
+                issuetype   = @{
+                    name = $actionContext.TemplateConfiguration.issuetype
                 }
             }
+        }
 
-            $splatParam = @{
-                Uri         = "$($actionContext.Configuration.url)/rest/api/latest/issue"
-                Method      = 'POST'
-                ContentType = 'application/json'
-                Body        = ([System.Text.Encoding]::UTF8.GetBytes(($ticketObject | ConvertTo-Json)))
-                Headers     = $headers
-            }
+        $splatParam = @{
+            Uri         = "$($actionContext.Configuration.url)/rest/api/latest/issue"
+            Method      = 'POST'
+            ContentType = 'application/json'
+            Body        = ([System.Text.Encoding]::UTF8.GetBytes(($ticketObject | ConvertTo-Json)))
+            Headers     = $headers
+        }
         
+        if (-Not($actionContext.DryRun -eq $true)) {
             $response = Invoke-RestMethod @splatParam
 
+            $outputContext.Success = $true
             $outputContext.AuditLogs.Add([PSCustomObject]@{
-                Message = "Successfully submitted a ticket [$($response.id)] for person $($personContext.Person.DisplayName)'"
-                IsError = $false
-            })
-        } else {
-            # Execute script flow two
+                    Message = "Successfully submitted a ticket [$($response.id)] for person $($personContext.Person.DisplayName)'"
+                    IsError = $false
+                })
         }
-    } else {
-        # Add an auditMessage showing what will happen during enforcement
-        $outputContext.AuditLogs.Add([PSCustomObject]@{
-            Message = "DryRun: Sending notification [$($actionContext.TemplateConfiguration.scriptFlow)] for: [$($personContext.Person.DisplayName)], will be executed during enforcement"
-        })
-        Write-Verbose ($ticketObject | ConvertTo-Json)
+        else {
+            Write-Warning "DryRun: Sending notification [$($actionContext.TemplateConfiguration.scriptFlow)] for: [$($personContext.Person.DisplayName)], will be executed during enforcement"
+        }
+        $outputContext.Success = $true
+    }
+    else {
+        throw "Incorrect scriptFlow"
     }
 }
 catch {
@@ -112,14 +108,8 @@ catch {
     }
 
     $outputContext.AuditLogs.Add([PSCustomObject]@{
-        Message = "Error occurred submitting ticket [$($actionContext.TemplateConfiguration.scriptFlow)] for: [$($personContext.Person.DisplayName)], Error: $errorMessage"
-        IsError = $true
-    })
-}
-finally {
-    # Check if auditLogs contains errors, if no errors are found, set success to true
-    if ($outputContext.AuditLogs.isError -contains $true) {
-        $outputContext.Success = $false
-    }
+            Message = "Error occurred submitting ticket [$($actionContext.TemplateConfiguration.scriptFlow)] for: [$($personContext.Person.DisplayName)], Error: $errorMessage"
+            IsError = $true
+        })
 }
 

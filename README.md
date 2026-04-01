@@ -1,13 +1,13 @@
 # HelloID-Conn-Prov-Notification-Atlassian-Jira
 
-| :warning: Warning                                                                                                                                                                                                                                 |
-| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| :warning: Warning                                                                                                                                                                                                                                               |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Please be aware that the current notifications only can be triggered by built-in events. For other applications please use the Target connector [HelloID Atlassian-Jira target system](https://github.com/Tools4everBV/HelloID-Conn-Prov-Target-Atlassian-Jira) |
-
 
 | :information_source: Information                                                                                                                                                                                                                                                                                                                                                       |
 | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | This repository contains the connector and configuration code only. The implementer is responsible to acquire the connection details such as username, password, certificate, etc. You might even need to sign a contract or agreement with the supplier before implementing this connector. Please contact the client's application manager to coordinate the connector requirements. |
+
 <br />
 <p align="center"> 
   <img src="https://www.tools4ever.nl/connector-logos/atlassianjira-logo.png">
@@ -22,7 +22,9 @@
     - [Prerequisites](#prerequisites)
     - [Connection settings](#connection-settings)
     - [Templates](#templates)
-      - [Tickets](#tickets)
+      - [Ticket](#ticket)
+      - [Service Management request](#service-management-request)
+  - [Differences Jira Cloud and Service Management specific API](#differences-jira-cloud-and-service-management-specific-api)
   - [Getting help](#getting-help)
   - [HelloID docs](#helloid-docs)
 
@@ -31,52 +33,84 @@
 _HelloID-Conn-Prov-Notification-Atlassian-Jira_ is a _notifcation_ connector. Atlassian provides a set of REST APIs that allow you to programmatically interact with its data. The [Jira API documentation](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-i) provides details of API commands that are used.
 
 ## Getting started
+
 ### Prerequisites
 
-  - Credentials with the rights as described in permissions
+- Credentials with the rights as described in permissions
 
 ### Connection settings
 
 The following settings are required to connect to the API.
 
-| Setting     | Description |
-| ------------ | ----------- |
+| Setting  | Description                             |
+| -------- | --------------------------------------- |
 | Jira Url | Example: https://customer.atlassian.net |
-| Username | User with permissions to create ticket |
-| API key | API key of the user |
+| Username | User with permissions to create ticket  |
+| API key  | API key of the user                     |
 
 More about API keys: https://id.atlassian.com/manage/api-tokens
-
 
 ### Templates
 
 There is currently only one template. When configuring the tickets, make sure to provide the correct _project.key_ and the correct _issueType_.
-The projects are supplied in a dropdown list in the template. Change this for each implementation. 
-| :warning: Warning                                                                                                                           |
+The projects are supplied in a dropdown list in the template. Change this for each implementation.
+| :warning: Warning |
 | :------------------------------------------------------------------------------------------------------------------------------------------ |
-|                                                                                                                                             |
+| |
 | Please keep in mind that the key form field names in the templates are used in the notification.ps1 changing them will break the connector. |
 
 ### Ticket
+
 To create a form for tickets the following template should be used: [template.json](https://github.com/Tools4everBV/HelloID-Conn-Prov-Notification-Atlassian-Jira/blob/main/template.json).
 
 The table below describes the different form fields from the template.
 
-| template key             | Description                                                                      | Mandatory |
-| ------------------------ | -------------------------------------------------------------------------------- | --------- |
-| scriptFlow | Fixed value of Change (read-only)  | Yes |
-| projectid | The project key value | Yes |
-| summary | Subject of the ticket  | Yes |
-| description | The body of the ticket. Variables can be used from the person model | Yes |
-| issueType | Must be the exact name of the issue type | Yes |
+| template key | Description                                                         | Mandatory |
+| ------------ | ------------------------------------------------------------------- | --------- |
+| scriptFlow   | Fixed value of Change (read-only)                                   | Yes       |
+| projectid    | The project key value                                               | Yes       |
+| summary      | Subject of the ticket                                               | Yes       |
+| description  | The body of the ticket. Variables can be used from the person model | Yes       |
+| issueType    | Must be the exact name of the issue type                            | Yes       |
 
+### Service Management request
 
+To create Service Management requests the files in the 'Service Management' folder can be used. A different endpoint is used for creating Service Management requests.
+
+The table below describes the different form fields from the template.
+
+| template key | Description                                                         | Mandatory |
+| ------------ | ------------------------------------------------------------------- | --------- |
+| scriptFlow   | Fixed value of Change (read-only)                                   | Yes       |
+| projectid    | The project key value                                               | Yes       |
+| summary      | Subject of the ticket                                               | Yes       |
+| description  | The body of the ticket. Variables can be used from the person model | Yes       |
+| requestType  | Must be the exact name of the request type                          | Yes       |
+
+## Differences Jira Cloud and Service Management specific API
+
+_/cloud/jira/platform/rest/v3_ is the general Jira Cloud API.
+Use it for core Jira objects like issues, projects, fields, workflows, users, JQL search, comments, transitions, and so on. Atlassian describes v3 as the latest Jira Cloud platform REST API, with the same operations as v2 but with ADF support for rich-text fields like description, comments, and multi-line text fields.
+
+_/cloud/jira/service-desk/rest_ is the Jira Service Management-specific API.
+Use it for service desk concepts like service desks, request types, customer requests, portal-facing request creation, customers, approvals, and other JSM-specific behavior. Atlassian explicitly says JSM is built on the Jira platform, so you can use the Jira platform APIs too, but the Service Management API exists for JSM-specific functionality.
+
+The easiest way to think about it is
+
+- Platform API = “backend Jira issue engine”
+- Service Desk API = “service management / portal layer on top of Jira”
+
+A simple mapping
+
+- Issue Type → platform API concept
+- Request Type → service desk API concept
+- JQL issue search → platform API
+- List service desks / request types → service desk API
+- Portal/customer request creation → service desk API
 
 ## Getting help
 
 > _For more information on how to configure a HelloID PowerShell connector, please refer to our [documentation](https://docs.helloid.com/en/provisioning/notifications--provisioning-/notification-systems--provisioning-/powershell-notification-systems--provisioning-/add,-edit,-or-remove-a-powershell-notification-system.html) pages_
-
-> _If you need help, feel free to ask questions on our [forum](https://forum.helloid.com/forum/helloid-connectors/provisioning/1266-helloid-conn-prov-notification-Atlassian-Jira)_
 
 ## HelloID docs
 
