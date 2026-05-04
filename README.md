@@ -1,21 +1,16 @@
 # HelloID-Conn-Prov-Notification-Atlassian-Jira
 
-| :warning: Warning                                                                                                                                                                                                                                               |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Please be aware that the current notifications only can be triggered by built-in events. For other applications please use the Target connector [HelloID Atlassian-Jira target system](https://github.com/Tools4everBV/HelloID-Conn-Prov-Target-Atlassian-Jira) |
-
-| :information_source: Information                                                                                                                                                                                                                                                                                                                                                       |
-| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| This repository contains the connector and configuration code only. The implementer is responsible to acquire the connection details such as username, password, certificate, etc. You might even need to sign a contract or agreement with the supplier before implementing this connector. Please contact the client's application manager to coordinate the connector requirements. |
+> [!IMPORTANT]
+> This repository contains the connector and configuration code only. The implementer is responsible to acquire the connection details such as username, password, certificate, etc. You might even need to sign a contract or agreement with the supplier before implementing this connector. Please contact the client's application manager to coordinate the connector requirements.
 
 <br />
 <p align="center"> 
-  <img src="https://www.tools4ever.nl/connector-logos/atlassianjira-logo.png">
+  <img src="https://raw.githubusercontent.com/Tools4everBV/HelloID-Conn-Prov-Notification-Atlassian-Jira/refs/heads/feature-added-notification-servicedesk-api/Logo.png">
 </p>
 
 ## Table of contents
 
-- [HelloID-Conn-Prov-Notification-Atlassian-Jira](#helloid-conn-prov-notification-topdesk)
+- [HelloID-Conn-Prov-Notification-Atlassian-Jira](#helloid-conn-prov-notification-atlassian-jira)
   - [Table of contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Getting started](#getting-started)
@@ -52,16 +47,15 @@ More about API keys: https://id.atlassian.com/manage/api-tokens
 
 ### Templates
 
-There is currently only one template. When configuring the tickets, make sure to provide the correct _project.key_ and the correct _issueType_.
+There are currently two templates. When configuring the tickets, make sure to provide the correct _project.key_ and the correct _issueType_.
 The projects are supplied in a dropdown list in the template. Change this for each implementation.
-| :warning: Warning |
-| :------------------------------------------------------------------------------------------------------------------------------------------ |
-| |
-| Please keep in mind that the key form field names in the templates are used in the notification.ps1 changing them will break the connector. |
 
-### Ticket
+> [!IMPORTANT]
+> Please keep in mind that the key form field names in the templates are used in the notification.ps1 changing them will break the connector.
 
-To create a form for tickets the following template should be used: [template.json](https://github.com/Tools4everBV/HelloID-Conn-Prov-Notification-Atlassian-Jira/blob/main/template.json).
+#### Ticket
+
+To create a form for tickets the following template should be used: [template.json](https://github.com/Tools4everBV/HelloID-Conn-Prov-Notification-Atlassian-Jira/blob/main/template_Ticket.json).
 
 The table below describes the different form fields from the template.
 
@@ -73,9 +67,9 @@ The table below describes the different form fields from the template.
 | description  | The body of the ticket. Variables can be used from the person model | Yes       |
 | issueType    | Must be the exact name of the issue type                            | Yes       |
 
-### Service Management request
+#### Service Management request
 
-To create Service Management requests the files in the 'Service Management' folder can be used. A different endpoint is used for creating Service Management requests.
+To create Service Management requests the following template should be used: [template.json](https://github.com/Tools4everBV/HelloID-Conn-Prov-Notification-Atlassian-Jira/blob/main/template_ServiceManagement.json).
 
 The table below describes the different form fields from the template.
 

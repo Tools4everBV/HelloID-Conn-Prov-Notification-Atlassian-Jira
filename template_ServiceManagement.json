@@ -1,6 +1,6 @@
 [
   {
-    "defaultValue": "Ticket",
+    "defaultValue": "ServiceManagement",
     "hide": false,
     "key": "scriptFlow",
     "templateOptions": {
