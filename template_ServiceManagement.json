@@ -1,0 +1,52 @@
+[
+  {
+    "defaultValue": "ServiceManagement",
+    "hide": false,
+    "key": "scriptFlow",
+    "templateOptions": {
+      "disabled": true,
+      "label": "Script flow"
+    },
+    "type": "input"
+  },
+  {
+    "defaultValue": "SERVICE",
+    "key": "projectid",
+    "templateOptions": {
+      "description": "Fixed value project id",
+      "label": "project id",
+      "required": true
+    },
+    "type": "input"
+  },
+  {
+    "defaultValue": "Indienstmelding voor medewerker {{ Person.DisplayName }}",
+    "key": "summary",
+    "templateOptions": {
+      "description": "Fill in the desired title of the ticket.",
+      "label": "Summary",
+      "required": true
+    },
+    "type": "input"
+  },
+  {
+    "defaultValue": "Preferred name: {{ Person.Name.NickName }}\nLast name: $($account.lastName)\nOfficial name: {{ Person.DisplayName }}\nFunctie: {{ Person.PrimaryContract.Title.Name }}\nStartdatum contract: $($account.startDate)\nEinddatum contract: $($account.endDate)\nAfdeling: {{ Person.PrimaryContract.Department.DisplayName }}\nManager: $($account.managerDisplayName)",
+    "key": "description",
+    "templateOptions": {
+      "label": "Description",
+      "required": true,
+      "rows": 15
+    },
+    "type": "textarea"
+  },
+  {
+    "defaultValue": "Intake",
+    "key": "requestType",
+    "templateOptions": {
+      "description": "Fixed value request type",
+      "label": "Request type",
+      "rows": 5
+    },
+    "type": "input"
+  }
+]
